@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engagement Action Plan Tracker — People Director View</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f8f7f4;color:#1a1a1a;padding:2rem 1rem}
+.page{max-width:1100px;margin:0 auto}
+.header{display:flex;align-items:center;gap:14px;margin-bottom:.5rem}
+.logo{width:40px;height:40px;background:#e8321a;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo span{color:#fff;font-weight:700;font-size:16px}
+.header-text h1{font-size:20px;font-weight:600}
+.header-text p{font-size:12px;color:#888;margin-top:2px}
+.role-badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:#e8321a;color:#fff;margin-bottom:1.5rem}
+.country-tabs{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid #e5e3de;margin-bottom:1.5rem}
+.tab{padding:9px 16px;font-size:13px;font-weight:500;border:none;background:none;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;font-family:inherit}
+.tab:hover{color:#1a1a1a}
+.tab.active{color:#e8321a;border-bottom-color:#e8321a}
+.tab.offline{color:#7b5ea7}
+.tab.offline.active{color:#7b5ea7;border-bottom-color:#7b5ea7}
+.country-panel{display:none}
+.country-panel.active{display:block}
+/* Metric cards */
+.meta-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:1.5rem}
+.metric-card{background:#fff;border-radius:8px;padding:11px 13px;border:1px solid #e5e3de}
+.metric-label{font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.metric-val{font-size:20px;font-weight:600}
+.metric-val.good{color:#0f6e56}
+.metric-val.warn{color:#854f0b}
+.metric-val.bad{color:#993c1d}
+.vs-badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:4px}
+.vs-badge.up{background:#EAF3DE;color:#27500A}
+.vs-badge.down{background:#FCEBEB;color:#791F1F}
+/* Section title */
+.section-title{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.07em;margin:1.2rem 0 .6rem}
+/* Factor cards */
+.factor-card{background:#fff;border:1px solid #e5e3de;border-radius:12px;margin-bottom:10px;overflow:hidden}
+.factor-header{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none}
+.factor-header:hover{background:#faf9f7}
+.factor-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.factor-badge.culture{background:#EEEDFE;color:#3C3489}
+.factor-badge.recognition{background:#FBEAF0;color:#72243E}
+.factor-badge.wellbeing{background:#E1F5EE;color:#085041}
+.factor-badge.leaders{background:#E6F1FB;color:#0C447C}
+.factor-badge.growth{background:#EAF3DE;color:#27500A}
+.factor-badge.communication{background:#FAEEDA;color:#633806}
+.factor-badge.engagement{background:#FAECE7;color:#712B13}
+.factor-badge.offline{background:#EDE4F7;color:#5B2D8E}
+.factor-title{font-size:14px;font-weight:500;flex:1}
+.chevron{font-size:16px;color:#bbb;transition:transform .2s;flex-shrink:0}
+.chevron.open{transform:rotate(180deg)}
+.factor-body{display:none;border-top:1px solid #f0ede8}
+.factor-body.open{display:block}
+/* Questions box */
+.questions-box{margin:14px 16px 0;font-size:12px;color:#555;font-style:italic;line-height:1.7;padding:10px 12px;background:#faf9f7;border-radius:6px;border-left:3px solid #e8321a}
+.questions-box .q{padding:2px 0}
+.questions-box .q strong{font-style:normal;color:#1a1a1a;font-weight:600}
+/* Three-column table */
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:14px 16px 0;border:1px solid #e5e3de;border-radius:8px;overflow:hidden}
+@media(max-width:700px){.three-col{grid-template-columns:1fr}}
+.col-head{background:#f5f3f0;padding:9px 12px;font-size:10px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e5e3de}
+.three-col>div:not(:last-child) .col-head,.three-col>div:not(:last-child) .col-body{border-right:1px solid #e5e3de}
+.col-body{padding:10px 12px;min-height:80px}
+.col-body.follow{border-left:1px solid #e5e3de}
+/* Action rows */
+.action-row{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid #f5f3f0;font-size:13px;color:#333;line-height:1.5}
+.action-row:last-child{border-bottom:none}
+.action-row::before{content:'';width:5px;height:5px;border-radius:50%;background:#e8321a;margin-top:7px;flex-shrink:0}
+.follow-row::before{background:#0f6e56}
+.action-row .status-inline{margin-left:auto;flex-shrink:0}
+/* Inline status mini */
+.st{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;border:none;cursor:pointer;font-family:inherit;white-space:nowrap}
+.st-todo{background:#F1EFE8;color:#5F5E5A}
+.st-wip{background:#FAEEDA;color:#633806}
+.st-done{background:#EAF3DE;color:#27500A}
+.st-blocked{background:#FCEBEB;color:#791F1F}
+.mini-status-group{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+/* Pulse section */
+.pulse-section{margin:14px 16px 16px;border-top:1px dashed #e5e3de;padding-top:14px}
+.pulse-title{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.pulse-dot{width:7px;height:7px;background:#e8321a;border-radius:50%;animation:blink 1.5s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.pulse-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.pulse-grid{grid-template-columns:1fr}}
+.pf label{font-size:11px;color:#999;display:block;margin-bottom:3px;font-weight:500}
+.pf input,.pf select,.pf textarea{width:100%;font-size:13px;border:1px solid #ddd;border-radius:7px;padding:7px 10px;background:#fff;color:#1a1a1a;outline:none;font-family:inherit;transition:border-color .15s}
+.pf input:focus,.pf select:focus,.pf textarea:focus{border-color:#e8321a}
+.pf textarea{resize:vertical;min-height:60px;line-height:1.5}
+.pf.full{grid-column:1/-1}
+/* Offline section specific */
+.offline-note{font-size:13px;color:#7b5ea7;background:#F5F0FC;border:1px solid #D8C8F0;border-radius:8px;padding:10px 14px;margin-bottom:1rem}
+.offline-card{border-color:#D8C8F0}
+.offline-card .factor-header:hover{background:#FAF5FF}
+.offline-card .pulse-dot{background:#7b5ea7}
+.offline-card .pf input:focus,.offline-card .pf select:focus,.offline-card .pf textarea:focus{border-color:#7b5ea7}
+/* Print */
+.print-btn{font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid #ddd;background:#fff;cursor:pointer;color:#888;font-family:inherit;float:right;margin-top:4px}
+.print-btn:hover{background:#f5f3f0}
+.incomplete-note{font-size:13px;color:#aaa;font-style:italic;padding:2rem;text-align:center;background:#fff;border-radius:12px;border:1px solid #e5e3de;margin-bottom:1rem}
+@media print{.print-btn,.country-tabs{display:none}.country-panel{display:block!important}.factor-body{display:block!important}body{background:#fff;padding:1rem}}
+
+/* ===== CORPORATE BRANDING ===== */
+body{background:#F5F3F0}
+.page{max-width:1100px;margin:0 auto}
+
+/* Top brand bar */
+.brand-bar{background:#1A0A2E;padding:0;margin-bottom:0;display:flex;align-items:stretch;min-height:64px}
+.brand-bar-left{background:#E8321A;display:flex;align-items:center;padding:0 24px;gap:12px;min-width:220px}
+.brand-bar-right{flex:1;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.brand-title{color:#fff;font-size:15px;font-weight:600;letter-spacing:.01em}
+.brand-subtitle{color:rgba(255,255,255,.55);font-size:12px;margin-top:2px}
+.brand-date{color:rgba(255,255,255,.45);font-size:11px}
+
+/* Hero banner */
+.hero{position:relative;height:160px;background:#1A0A2E;overflow:hidden;margin-bottom:1.5rem;display:flex;align-items:center}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.35}
+.hero-content{position:relative;z-index:2;padding:0 2rem}
+.hero-tag{display:inline-block;background:#E8321A;color:#fff;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:3px;margin-bottom:10px}
+.hero-heading{color:#fff;font-size:26px;font-weight:700;line-height:1.2}
+.hero-sub{color:rgba(255,255,255,.7);font-size:13px;margin-top:6px}
+
+/* Image strip between header and tabs */
+.img-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-bottom:1.5rem;border-radius:10px;overflow:hidden;height:90px}
+.img-strip-slot{background:#2A1A4E;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.img-strip-slot img{width:100%;height:100%;object-fit:cover;opacity:.75;transition:opacity .3s}
+.img-strip-slot:hover img{opacity:1}
+.img-strip-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:rgba(255,255,255,.3);font-size:11px;cursor:pointer}
+.img-strip-placeholder i{font-size:20px}
+
+/* Tabs restyled */
+.country-tabs{background:#fff;border-radius:10px;padding:4px;border:1px solid #E5E3DE;gap:3px;margin-bottom:1.5rem;display:flex;flex-wrap:wrap}
+.tab{border-radius:7px;padding:8px 16px;font-size:13px;font-weight:500;border:none;background:none;cursor:pointer;color:#888;border-bottom:none;margin-bottom:0;transition:all .15s;font-family:inherit}
+.tab:hover{background:#F5F3F0;color:#1a1a1a}
+.tab.active{background:#E8321A;color:#fff}
+.tab.offline{color:#7b5ea7}
+.tab.offline.active{background:#7b5ea7;color:#fff}
+
+/* Metric cards restyled */
+.metric-card{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid #E5E3DE;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.metric-label{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;font-weight:600}
+.metric-val{font-size:22px;font-weight:700}
+
+/* Factor cards restyled */
+.factor-card{background:#fff;border:1px solid #E5E3DE;border-radius:12px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.factor-header{display:flex;align-items:center;gap:10px;padding:14px 18px;cursor:pointer;user-select:none}
+.factor-header:hover{background:#FAFAF8}
+
+/* Section title */
+.section-title{font-size:10px;font-weight:700;color:#C8C4BC;text-transform:uppercase;letter-spacing:.08em;margin:1.2rem 0 .6rem}
+
+/* Column headers */
+.col-head{background:#F5F3F0;padding:9px 14px;font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #E5E3DE}
+
+/* Print */
+@media print{.brand-bar,.img-strip,.print-btn,.country-tabs{display:none!important}.hero{display:none!important}.country-panel{display:block!important}.factor-body{display:block!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<!-- BRAND BAR -->
+<div style="background:#fff;border-bottom:3px solid #E8421A;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;min-height:70px">
+  <!-- Real Smartbox logo SVG -->
+  
+  <div style="display:flex;align-items:center;gap:16px">
+    <div style="text-align:right">
+      <div style="font-size:13px;font-weight:600;color:#1A0A0A">Engagement Survey — Action Plan Tracker</div>
+      <div style="font-size:11px;color:#999;margin-top:1px">Jan 2026 · People &amp; Culture · Smartbox Group · Updated 19 May 2026</div>
+    </div>
+    <button class="print-btn" style="margin:0;flex-shrink:0" onclick="window.print()"><i class="ti ti-printer"></i> Print / PDF</button>
+  </div>
+</div>
+
+<!-- HERO BANNER using brand shapes as decoration -->
+<div style="background:#1A0A2E;padding:2.5rem 2rem 2rem;position:relative;overflow:hidden;min-height:180px;display:flex;align-items:center">
+
+  <!-- Decorative brand shapes - star top right -->
+  <svg style="position:absolute;top:-20px;right:60px;opacity:.12" width="220" height="220" viewBox="0 0 100 100" fill="white">
+    <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35" />
+  </svg>
+
+  <!-- Heart shape bottom right -->
+  <svg style="position:absolute;bottom:-30px;right:200px;opacity:.08" width="180" height="180" viewBox="0 0 100 100" fill="white">
+    <path d="M50 85 C50 85 10 58 10 32 C10 18 20 10 30 10 C38 10 46 15 50 22 C54 15 62 10 70 10 C80 10 90 18 90 32 C90 58 50 85 50 85Z"/>
+  </svg>
+
+  <!-- Lightning bolt right -->
+  <svg style="position:absolute;top:10px;right:20px;opacity:.1" width="120" height="160" viewBox="0 0 50 80" fill="white">
+    <polygon points="30,0 10,45 25,45 20,80 45,30 28,30"/>
+  </svg>
+
+  <!-- Sunburst left -->
+  <svg style="position:absolute;bottom:-20px;left:300px;opacity:.07" width="160" height="160" viewBox="0 0 100 100" fill="white">
+    <circle cx="50" cy="50" r="20"/>
+    <g stroke="white" stroke-width="8" stroke-linecap="round">
+      <line x1="50" y1="5" x2="50" y2="20"/>
+      <line x1="50" y1="80" x2="50" y2="95"/>
+      <line x1="5" y1="50" x2="20" y2="50"/>
+      <line x1="80" y1="50" x2="95" y2="50"/>
+      <line x1="18" y1="18" x2="29" y2="29"/>
+      <line x1="71" y1="71" x2="82" y2="82"/>
+      <line x1="82" y1="18" x2="71" y2="29"/>
+      <line x1="29" y1="71" x2="18" y2="82"/>
+    </g>
+  </svg>
+
+  <!-- Arrow/flag shape far left accent -->
+  <svg style="position:absolute;left:-10px;top:50%;transform:translateY(-50%);opacity:.15" width="60" height="80" viewBox="0 0 60 80" fill="#E8421A">
+    <polygon points="0,0 50,0 60,40 50,80 0,80"/>
+  </svg>
+
+  <div style="position:relative;z-index:2;padding-left:2.5rem">
+    <div style="display:inline-block;background:#E8421A;color:#fff;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:4px;margin-bottom:14px">People &amp; Culture · FY26</div>
+    <div style="color:#fff;font-size:30px;font-weight:800;line-height:1.15;letter-spacing:-.5px">Engagement Survey<br><span style="color:#E8421A">Action Plan</span> Follow-up</div>
+    <div style="color:rgba(255,255,255,.6);font-size:13px;margin-top:10px;display:flex;gap:20px;flex-wrap:wrap">
+      <span>📍 Jan 2026 results</span>
+      <span>🌍 5 countries</span>
+      <span>👥 BU Offline</span>
+    </div>
+  </div>
+
+  <!-- Right side: brand shapes composition -->
+  <div style="position:absolute;right:2.5rem;top:50%;transform:translateY(-50%);display:flex;gap:16px;align-items:center;opacity:.9">
+    <!-- Heart -->
+    <svg width="44" height="44" viewBox="0 0 100 100" fill="#E8421A">
+      <path d="M50 85 C50 85 10 58 10 32 C10 18 20 10 30 10 C38 10 46 15 50 22 C54 15 62 10 70 10 C80 10 90 18 90 32 C90 58 50 85 50 85Z"/>
+    </svg>
+    <!-- Star -->
+    <svg width="50" height="50" viewBox="0 0 100 100" fill="#E8421A">
+      <polygon points="50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35"/>
+    </svg>
+    <!-- Lightning -->
+    <svg width="32" height="48" viewBox="0 0 50 80" fill="#E8421A">
+      <polygon points="30,0 10,45 25,45 20,80 45,30 28,30"/>
+    </svg>
+  </div>
+</div>
+<div class="page">
+
+<!-- AUTOSAVE TOOLBAR -->
+<div id="save-bar" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:10px 16px;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:12px;font-weight:600;color:#1a1a1a">&#128190; Progress</span>
+    <span id="save-status" style="font-size:12px;color:#aaa">Not saved yet — changes auto-save as you type</span>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button onclick="saveAll()" style="font-size:12px;padding:6px 14px;border-radius:6px;border:none;background:#e8321a;color:#fff;cursor:pointer;font-family:inherit;font-weight:600">&#128190; Save now</button>
+    <button onclick="exportSection()" style="font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid #e5e3de;background:#fff;color:#555;cursor:pointer;font-family:inherit;font-weight:500" title="Downloads the current country tab as a standalone HTML file to share with your People Director">&#128229; Export this country</button>
+    <button onclick="clearSaved()" style="font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid #e5e3de;background:#fff;color:#bbb;cursor:pointer;font-family:inherit;font-weight:500">&#128465; Clear</button>
+  </div>
+</div>
+
+<div class="country-tabs">
+  <button class="tab active" onclick="showCountry('spain',this)">🇪🇸 Spain</button>
+  <button class="tab" onclick="showCountry('france',this)">🇫🇷 France</button>
+  <button class="tab" onclick="showCountry('nordics',this)">🇸🇪 Nordics</button>
+  <button class="tab" onclick="showCountry('italy',this)">🇮🇹 Italy & CH</button>
+  <button class="tab" onclick="showCountry('belgium',this)">🇧🇪 Belgium</button>
+  <button class="tab offline" onclick="showCountry('offline',this)">📦 BU Offline</button>
+</div>
+
+<!-- ========== SPAIN ========== -->
+<div id="country-spain" class="country-panel active">
+  <div class="meta-row">
+    <div class="metric-card"><div class="metric-label">Global engagement</div><div class="metric-val good">78%</div><span class="vs-badge down">&#9660; -3 pts vs Jun 25</span></div>
+    <div class="metric-card"><div class="metric-label">Respondents</div><div class="metric-val">33 of 41</div><div style="font-size:11px;color:#854f0b;margin-top:2px">80% participation</div></div>
+    <div class="metric-card"><div class="metric-label">Favorable</div><div class="metric-val good">78%</div></div>
+    <div class="metric-card"><div class="metric-label">Neutral</div><div class="metric-val warn">17</div></div>
+    <div class="metric-card"><div class="metric-label">Unfavorable</div><div class="metric-val bad">5</div></div>
+  </div>
+  <div class="section-title">Jan 2026 Survey — Action plan by factor</div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge culture">Culture</span>
+      <span class="factor-title">Culture &amp; Inclusion</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> "I feel respected at Smartbox Group." — <strong>73%</strong> (&#9660; -21 vs Jun 25)</div>
+        <div class="q"><strong>Q2.</strong> "People from all backgrounds have the same opportunities to succeed at Smartbox Group." — <strong>76%</strong> (&#9660; -12 vs Jun 25)</div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>Anonymous survey to better understand results on both related questions</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Individual conversations with manager</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Short pulse surveys in stand-ups to track progress</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Monthly breakfasts with Yago (small groups of 5)</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Proactive use of &quot;Unbox your World&quot; recognition programme</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>Reinforce action plan info in stand-ups</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge recognition">Recognition</span>
+      <span class="factor-title">Recognition &amp; Rewards</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> "Most of the time, I receive appropriate recognition for my good work at Smartbox Group." — <strong>61%</strong> (&#9660; -11)</div>
+        <div class="q"><strong>Q2.</strong> "In general, Smartbox Group rewards and recognises the right people." — <strong>52%</strong> (&#9660; -11)</div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>Survey analysis</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Short pulse surveys after the &quot;maitines&quot; monthly meeting</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Explain recognition programme in &quot;maitines&quot; — award ceremony in June</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Annual recognition reminders</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Newsletter section: milestones &amp; team highlights</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>Survey analysis done</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Pulse surveys after maitines in place</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge wellbeing">Wellbeing</span>
+      <span class="factor-title">Wellbeing &amp; Compensation</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> "Overall, I am satisfied with the benefits I have." — <strong>85%</strong> (&#9650; +7)</div>
+        <div class="q"><strong>Q2.</strong> "My total compensation package, including benefits, is in line with the value I bring to the organisation." — <strong>42%</strong> (&#9660; -2)</div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>Anonymous survey on both related questions</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Reinforce awareness of benefits &amp; non-cash compensation</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Visibility of salary band positioning vs. market</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Salary review based on performance, objectives and band position</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>Salary review process per group guidelines</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>All benefits explained in maitines monthly meeting</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Salary band shared in year-end letters (appraisal, bonus, FY26 package, band position)</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge leaders">Leadership</span>
+      <span class="factor-title">Leaders &amp; ELT</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> "The leaders of Smartbox Group (ELT) have communicated a vision that motivates me." — <strong>58%</strong> (&#9660; -11)</div>
+        <div class="q"><strong>Q2.</strong> "I have confidence in the leaders of Smartbox Group (ELT)." — <strong>52%</strong> (&#9660; -1)</div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>ELT diagnostics</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Active participation in BR Q&amp;A session</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Action plans to improve perception in areas we can work on with them</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>Results communicated to ELT</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Action plans defined with ELT</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>ELT introduced in breakfasts with Yago</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Company strategy explained in breakfasts</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card" style="border-color:#E8421A22">
+    <div class="factor-header" style="background:#FFF8F7;cursor:default">
+      <span class="factor-badge" style="background:#FDECEA;color:#C0392B">&#128308; Pulse Survey</span>
+      <span class="factor-title" style="font-weight:600">June 2026 Pulse Survey — Plan &amp; Results</span>
+      <span style="font-size:11px;color:#aaa">Factors may differ from Jan survey</span>
+    </div>
+    <div class="factor-body open" style="display:block;padding:16px">
+      <div style="font-size:12px;color:#999;margin-bottom:12px;padding:8px 12px;background:#FFF8F7;border-radius:6px;border-left:3px solid #E8421A">
+        Add one row per factor you want to include in the pulse survey. Factors don't need to match the Jan 2026 survey — add, rename or remove as needed.
+      </div>
+      <div id="pulse-rows-container">
+
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+      </div>
+      <button onclick="addPulseRow(this)" style="margin-top:8px;font-size:12px;padding:7px 16px;border-radius:6px;border:1px dashed #e8321a;background:none;color:#e8321a;cursor:pointer;font-family:inherit;font-weight:600;width:100%">+ Add factor to pulse survey</button>
+    </div>
+  </div>
+</div>
+
+<div id="country-france" class="country-panel">
+  <div class="meta-row">
+    <div class="metric-card"><div class="metric-label">Global engagement</div><div class="metric-val warn">57%</div><span class="vs-badge up">&#9650; +2 pts vs Jun 25</span></div>
+    <div class="metric-card"><div class="metric-label">Respondents</div><div class="metric-val">47 of 47</div><div style="font-size:11px;color:#0f6e56;margin-top:2px">100% participation</div></div>
+    <div class="metric-card"><div class="metric-label">Favorable</div><div class="metric-val good">57%</div></div>
+    <div class="metric-card"><div class="metric-label">Neutral</div><div class="metric-val warn">27</div></div>
+    <div class="metric-card"><div class="metric-label">Unfavorable</div><div class="metric-val bad">16</div></div>
+  </div>
+  <div class="section-title">Jan 2026 Survey — Action plan by factor</div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge communication">Communication</span>
+      <span class="factor-title">Communication &amp; Transparency — Leadership/Strategy</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> Leadership | Leadership - Company Strategy — <strong>36%</strong> (&#9660; -14 vs Jun 25)</div>
+        <div class="q" style="color:#bbb">Q2. To be confirmed by People Partner</div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>Monthly newsletter &quot;Newsletter France&quot; — launched May 2026</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Quarterly Townhall (MD France) — 1st session 7 May 2026</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>TaskForce synthesis slides — systematic follow-up after each strategic meeting</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>Newsletter launched &#10003; — editorial calendar shared with CODIR</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Townhall Q2 done &#10003; — next: Q3 2026</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>PPT template — to create &amp; share on SharePoint (in progress)</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge engagement">Engagement</span>
+      <span class="factor-title">Engagement &amp; Collective Effectiveness — Peer Collaboration</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> Culture - Peer relationship / Collaboration — <strong>55%</strong> (&#9660; -5 vs Jun 25)</div>
+        <div class="q" style="color:#bbb">Q2. To be confirmed by People Partner</div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>Post-measure pulse surveys (MS Forms + QR code) after each key decision</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>BU France team-building event — 4 June 2026</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>2 pulse surveys done &#10003; — ongoing cadence in place</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Team-building confirmed &#10003; — provider to be selected</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge wellbeing">Wellbeing</span>
+      <span class="factor-title">Wellbeing &amp; Benefits — Compensation</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> Wellbeing - Compensation &amp; Benefits — <strong>36%</strong> (&#9650; vs Jun 25)</div>
+        <div class="q" style="color:#bbb">Q2. To be confirmed by People Partner</div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>Alan supplementary health plan — study Sept 2026, potential deployment Jan 2027</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Unbox Day: new one FY26</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Sports participation</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>Alan study scheduled — to negotiate with Group HR &amp; Finance. Budget approval needed</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Request to the CSE / Sport participation</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge recognition">Recognition</span>
+      <span class="factor-title">Recognition at Work</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> Job – Recognition — <strong>45%</strong> (&#9660; -6 vs Jun 25)</div>
+        <div class="q" style="color:#bbb">Q2. To be confirmed by People Partner</div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>Victories spotlight in Townhall &amp; Q&amp;A (replaces monthly breakfast format)</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Success gong (physical bell + Teams) — quick win, launch June 2026</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>&quot;Success round&quot; as standing agenda item in every team meeting</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>Victories in Townhall validated &#10003; — format to be structured with CODIR</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Gong + meeting checklist June 2026 — guide to share with all managers</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card" style="border-color:#E8421A22">
+    <div class="factor-header" style="background:#FFF8F7;cursor:default">
+      <span class="factor-badge" style="background:#FDECEA;color:#C0392B">&#128308; Pulse Survey</span>
+      <span class="factor-title" style="font-weight:600">June 2026 Pulse Survey — Plan &amp; Results</span>
+      <span style="font-size:11px;color:#aaa">Factors may differ from Jan survey</span>
+    </div>
+    <div class="factor-body open" style="display:block;padding:16px">
+      <div style="font-size:12px;color:#999;margin-bottom:12px;padding:8px 12px;background:#FFF8F7;border-radius:6px;border-left:3px solid #E8421A">
+        Add one row per factor you want to include in the pulse survey. Factors don't need to match the Jan 2026 survey — add, rename or remove as needed.
+      </div>
+      <div id="pulse-rows-container">
+
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+      </div>
+      <button onclick="addPulseRow(this)" style="margin-top:8px;font-size:12px;padding:7px 16px;border-radius:6px;border:1px dashed #e8321a;background:none;color:#e8321a;cursor:pointer;font-family:inherit;font-weight:600;width:100%">+ Add factor to pulse survey</button>
+    </div>
+  </div>
+</div>
+
+<div id="country-nordics" class="country-panel">
+  <div class="meta-row">
+    <div class="metric-card"><div class="metric-label">Global engagement</div><div class="metric-val warn">67%</div><span class="vs-badge up">&#9650; +7 pts vs prev.</span></div>
+    <div class="metric-card"><div class="metric-label">Respondents</div><div class="metric-val">7 of 7</div><div style="font-size:11px;color:#0f6e56;margin-top:2px">100% participation</div></div>
+    <div class="metric-card"><div class="metric-label">Favorable</div><div class="metric-val good">67%</div></div>
+    <div class="metric-card"><div class="metric-label">Neutral</div><div class="metric-val warn">19%</div></div>
+    <div class="metric-card"><div class="metric-label">Unfavorable</div><div class="metric-val bad">14%</div></div>
+  </div>
+  <div class="section-title">Jan 2026 Survey — Action plan by factor</div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge culture">Culture</span>
+      <span class="factor-title">Culture &amp; Belonging</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> "I feel a part of Smartbox Group." — <strong>100%</strong> (&#9650; +40 vs Jun 25)</div>
+        <div class="q" style="color:#bbb">Q2. To be confirmed by People Partner</div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>Big wins celebrations — Summer party + social club</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>All hands monthly office meetings</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>Monthly social club meetings running</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Monthly breakfasts with survey Q&amp;A</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Pitstop meetings every second week</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge recognition">Recognition</span>
+      <span class="factor-title">Recognition</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> "Generally, the right people are rewarded at Smartbox Group." — <strong>57%</strong> (&#9650; +4)</div>
+        <div class="q" style="color:#bbb">Q2. To be confirmed by People Partner</div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>Field sales quarterly award</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Tuesdays shout outs / roundtable meeting</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>1 yearly off-site</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>Monthly sparring and coaching with GM</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>All hands monthly meetings</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge growth">Growth</span>
+      <span class="factor-title">Job — Growth &amp; Development</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box">
+        <div class="q"><strong>Q1.</strong> "I believe Smartbox is a good place to grow." — <strong>86%</strong> (&#9650; +26 vs Jun 25)</div>
+        <div class="q"><strong>Q2.</strong> "Based on my experience and knowledge I am likely to recommend a Smartbox product to friends and family." — <strong>83%</strong></div>
+      </div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><div class="action-row"><span>All 100% training completed</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Udemy licenses</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>Coaching with GM</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row"><span>New governance &amp; ways of working</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><div class="action-row follow-row"><span>Individual performance presentation once a month</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div><div class="action-row follow-row"><span>Pitstop meetings every second week</span><div class="status-inline"><div class="mini-status-group"><button class="st st-todo" onclick="mst(this,'st-todo')">To do</button><button class="st st-wip" onclick="mst(this,'st-wip')">In progress</button><button class="st st-done" onclick="mst(this,'st-done')">Done</button><button class="st st-blocked" onclick="mst(this,'st-blocked')">Blocked</button></div></div></div></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:120px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes, observations, blockers…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card" style="border-color:#E8421A22">
+    <div class="factor-header" style="background:#FFF8F7;cursor:default">
+      <span class="factor-badge" style="background:#FDECEA;color:#C0392B">&#128308; Pulse Survey</span>
+      <span class="factor-title" style="font-weight:600">June 2026 Pulse Survey — Plan &amp; Results</span>
+      <span style="font-size:11px;color:#aaa">Factors may differ from Jan survey</span>
+    </div>
+    <div class="factor-body open" style="display:block;padding:16px">
+      <div style="font-size:12px;color:#999;margin-bottom:12px;padding:8px 12px;background:#FFF8F7;border-radius:6px;border-left:3px solid #E8421A">
+        Add one row per factor you want to include in the pulse survey. Factors don't need to match the Jan 2026 survey — add, rename or remove as needed.
+      </div>
+      <div id="pulse-rows-container">
+
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+      </div>
+      <button onclick="addPulseRow(this)" style="margin-top:8px;font-size:12px;padding:7px 16px;border-radius:6px;border:1px dashed #e8321a;background:none;color:#e8321a;cursor:pointer;font-family:inherit;font-weight:600;width:100%">+ Add factor to pulse survey</button>
+    </div>
+  </div>
+</div>
+
+<div id="country-italy" class="country-panel">
+  <div class="meta-row">
+    <div class="metric-card"><div class="metric-label">Global engagement</div><div class="metric-val good">72%</div><span class="vs-badge up">&#9650; +36 vs prev.</span></div>
+    <div class="metric-card"><div class="metric-label">Respondents</div><div class="metric-val">45</div><div style="font-size:11px;color:#854f0b;margin-top:2px">46 of 55 — 84% participation</div></div>
+    <div class="metric-card"><div class="metric-label">Favorable</div><div class="metric-val good">72%</div></div>
+    <div class="metric-card"><div class="metric-label">Neutral</div><div class="metric-val warn">16</div></div>
+    <div class="metric-card"><div class="metric-label">Unfavorable</div><div class="metric-val bad">12</div></div>
+  </div>
+  <p style="font-size:12px;color:#888;background:#fff;border:1px solid #e5e3de;border-radius:8px;padding:10px 14px;margin-bottom:1rem;">&#9888;&#65039; Action plan to be completed by People Partner (BU Italy &amp; CH).</p>
+  <div class="section-title">Jan 2026 Survey — Action plan by factor</div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge culture">Culture</span>
+      <span class="factor-title">Culture &amp; Belonging</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box" style="font-style:normal;color:#bbb">Q1 and Q2 — to be added by People Partner</div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge recognition">Recognition</span>
+      <span class="factor-title">Recognition &amp; Rewards</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box" style="font-style:normal;color:#bbb">Q1 and Q2 — to be added by People Partner</div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge wellbeing">Wellbeing</span>
+      <span class="factor-title">Wellbeing &amp; Compensation</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box" style="font-style:normal;color:#bbb">Q1 and Q2 — to be added by People Partner</div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge leaders">Leadership</span>
+      <span class="factor-title">Leaders &amp; ELT</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box" style="font-style:normal;color:#bbb">Q1 and Q2 — to be added by People Partner</div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card" style="border-color:#E8421A22">
+    <div class="factor-header" style="background:#FFF8F7;cursor:default">
+      <span class="factor-badge" style="background:#FDECEA;color:#C0392B">&#128308; Pulse Survey</span>
+      <span class="factor-title" style="font-weight:600">June 2026 Pulse Survey — Plan &amp; Results</span>
+      <span style="font-size:11px;color:#aaa">Factors may differ from Jan survey</span>
+    </div>
+    <div class="factor-body open" style="display:block;padding:16px">
+      <div style="font-size:12px;color:#999;margin-bottom:12px;padding:8px 12px;background:#FFF8F7;border-radius:6px;border-left:3px solid #E8421A">
+        Add one row per factor you want to include in the pulse survey. Factors don't need to match the Jan 2026 survey — add, rename or remove as needed.
+      </div>
+      <div id="pulse-rows-container">
+
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+      </div>
+      <button onclick="addPulseRow(this)" style="margin-top:8px;font-size:12px;padding:7px 16px;border-radius:6px;border:1px dashed #e8321a;background:none;color:#e8321a;cursor:pointer;font-family:inherit;font-weight:600;width:100%">+ Add factor to pulse survey</button>
+    </div>
+  </div>
+</div>
+
+<div id="country-belgium" class="country-panel">
+  <div class="meta-row">
+    <div class="metric-card"><div class="metric-label">Global engagement</div><div class="metric-val warn">67%</div></div>
+    <div class="metric-card"><div class="metric-label">Respondents</div><div class="metric-val">17</div><div style="font-size:11px;color:#0f6e56;margin-top:2px">18 responses (1 excl.)</div></div>
+    <div class="metric-card"><div class="metric-label">Favorable</div><div class="metric-val good">67%</div></div>
+    <div class="metric-card"><div class="metric-label">Neutral</div><div class="metric-val warn">27</div></div>
+    <div class="metric-card"><div class="metric-label">Unfavorable</div><div class="metric-val bad">6</div></div>
+  </div>
+  <p style="font-size:12px;color:#888;background:#fff;border:1px solid #e5e3de;border-radius:8px;padding:10px 14px;margin-bottom:1rem;">&#9888;&#65039; Action plan to be completed by People Partner (BU Benel).</p>
+  <div class="section-title">Jan 2026 Survey — Action plan by factor</div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge culture">Culture</span>
+      <span class="factor-title">Culture &amp; Belonging</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box" style="font-style:normal;color:#bbb">Q1 and Q2 — to be added by People Partner</div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge recognition">Recognition</span>
+      <span class="factor-title">Recognition &amp; Rewards</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box" style="font-style:normal;color:#bbb">Q1 and Q2 — to be added by People Partner</div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge wellbeing">Wellbeing</span>
+      <span class="factor-title">Wellbeing &amp; Compensation</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box" style="font-style:normal;color:#bbb">Q1 and Q2 — to be added by People Partner</div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card">
+    <div class="factor-header" onclick="toggle(this)">
+      <span class="factor-badge leaders">Leadership</span>
+      <span class="factor-title">Leaders &amp; ELT</span>
+      <i class="ti ti-chevron-down chevron"></i>
+    </div>
+    <div class="factor-body">
+      <div class="questions-box" style="font-style:normal;color:#bbb">Q1 and Q2 — to be added by People Partner</div>
+      <div class="three-col">
+        <div><div class="col-head">Actions planned</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Follow-up</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="To be completed by PP…"></textarea></div></div>
+        <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:100px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes…"></textarea></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="factor-card" style="border-color:#E8421A22">
+    <div class="factor-header" style="background:#FFF8F7;cursor:default">
+      <span class="factor-badge" style="background:#FDECEA;color:#C0392B">&#128308; Pulse Survey</span>
+      <span class="factor-title" style="font-weight:600">June 2026 Pulse Survey — Plan &amp; Results</span>
+      <span style="font-size:11px;color:#aaa">Factors may differ from Jan survey</span>
+    </div>
+    <div class="factor-body open" style="display:block;padding:16px">
+      <div style="font-size:12px;color:#999;margin-bottom:12px;padding:8px 12px;background:#FFF8F7;border-radius:6px;border-left:3px solid #E8421A">
+        Add one row per factor you want to include in the pulse survey. Factors don't need to match the Jan 2026 survey — add, rename or remove as needed.
+      </div>
+      <div id="pulse-rows-container">
+
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+      </div>
+      <button onclick="addPulseRow(this)" style="margin-top:8px;font-size:12px;padding:7px 16px;border-radius:6px;border:1px dashed #e8321a;background:none;color:#e8321a;cursor:pointer;font-family:inherit;font-weight:600;width:100%">+ Add factor to pulse survey</button>
+    </div>
+  </div>
+</div>
+
+<div id="country-offline" class="country-panel">
+  <div class="offline-note">
+    &#128230; <strong>BU Offline — Cross-country action plan</strong><br>
+    Forward-looking planning space. Define factors and actions after June pulse survey results come in.
+  </div>
+
+  <div class="factor-card" style="border-style:dashed;border-color:#D8C8F0">
+    <div class="factor-header" style="background:#FAF5FF;cursor:default">
+      <span class="factor-badge offline">+ Add factor</span>
+      <span class="factor-title" style="color:#aaa">Define factors after June pulse survey results</span>
+    </div>
+    <div class="factor-body open" style="display:block;padding:16px">
+      <div id="offline-rows-container"></div>
+      <button onclick="addOfflineRow(this)" style="font-size:12px;padding:7px 16px;border-radius:6px;border:1px dashed #7b5ea7;background:none;color:#7b5ea7;cursor:pointer;font-family:inherit;font-weight:600;width:100%">+ Add factor</button>
+    </div>
+  </div>
+
+  <div class="factor-card" style="border-color:#E8421A22">
+    <div class="factor-header" style="background:#FFF8F7;cursor:default">
+      <span class="factor-badge" style="background:#FDECEA;color:#C0392B">&#128308; Pulse Survey</span>
+      <span class="factor-title" style="font-weight:600">June 2026 Pulse Survey — Plan &amp; Results</span>
+      <span style="font-size:11px;color:#aaa">Factors may differ from Jan survey</span>
+    </div>
+    <div class="factor-body open" style="display:block;padding:16px">
+      <div style="font-size:12px;color:#999;margin-bottom:12px;padding:8px 12px;background:#FFF8F7;border-radius:6px;border-left:3px solid #E8421A">
+        Add one row per factor you want to include in the pulse survey. Factors don't need to match the Jan 2026 survey — add, rename or remove as needed.
+      </div>
+      <div id="pulse-rows-container">
+
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+    <div class="pulse-factor-row" style="background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+        <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+      </div>
+      <div class="pulse-grid">
+        <div class="pf"><label>Planned date</label><input type="date"></div>
+        <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+        <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+        <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+      </div>
+    </div>
+      </div>
+      <button onclick="addPulseRow(this)" style="margin-top:8px;font-size:12px;padding:7px 16px;border-radius:6px;border:1px dashed #e8321a;background:none;color:#e8321a;cursor:pointer;font-family:inherit;font-weight:600;width:100%">+ Add factor to pulse survey</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+</div><!-- .page -->
+
+<script>
+function showCountry(id,btn){
+  document.querySelectorAll('.country-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('country-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+function toggle(header){
+  const body=header.nextElementSibling;
+  const chev=header.querySelector('.chevron');
+  const open=body.classList.toggle('open');
+  chev.classList.toggle('open',open);
+}
+function mst(btn,cls){
+  const grp=btn.parentElement;
+  const already=btn.classList.contains(cls);
+  grp.querySelectorAll('.st').forEach(b=>b.classList.remove('st-todo','st-wip','st-done','st-blocked'));
+  if(!already) btn.classList.add(cls);
+}
+
+
+// =============================================
+// AUTO-SAVE & RESTORE — localStorage persistence
+// =============================================
+
+const SAVE_KEY = 'sb_engagement_tracker_v1';
+
+function assignSaveKeys() {
+  let i = 0;
+  document.querySelectorAll('input[type="date"], input[type="text"], select, textarea').forEach(el => {
+    if (!el.dataset.saveKey) el.dataset.saveKey = 'field_' + (i++);
+  });
+  let j = 0;
+  document.querySelectorAll('.mini-status-group, .status-group').forEach(grp => {
+    if (!grp.dataset.saveKey) grp.dataset.saveKey = 'status_' + (j++);
+  });
+}
+
+function saveAll() {
+  const data = {};
+  document.querySelectorAll('input[type="date"], input[type="text"], select, textarea').forEach(el => {
+    if (el.dataset.saveKey) data[el.dataset.saveKey] = el.value;
+  });
+  document.querySelectorAll('.mini-status-group, .status-group').forEach(grp => {
+    if (!grp.dataset.saveKey) return;
+    const active = grp.querySelector('.st-todo,.st-wip,.st-done,.st-blocked,.sel-todo,.sel-progress,.sel-done,.sel-blocked');
+    data[grp.dataset.saveKey] = active ? active.textContent.trim() : '';
+  });
+  data['_saved_at'] = new Date().toISOString();
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+    const s = document.getElementById('save-status');
+    if (s) { s.textContent = 'Saved at ' + new Date().toLocaleTimeString(); s.style.color = '#0f6e56'; }
+  } catch(e) {
+    const s = document.getElementById('save-status');
+    if (s) { s.textContent = 'Save failed — storage full?'; s.style.color = '#993c1d'; }
+  }
+}
+
+function loadAll() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) return;
+  let data;
+  try { data = JSON.parse(raw); } catch(e) { return; }
+
+  document.querySelectorAll('input[type="date"], input[type="text"], select, textarea').forEach(el => {
+    if (el.dataset.saveKey && data[el.dataset.saveKey] !== undefined) el.value = data[el.dataset.saveKey];
+  });
+
+  const statusMap = { 'To do': ['st-todo','sel-todo'], 'In progress': ['st-wip','sel-progress'], 'Done': ['st-done','sel-done'], 'Blocked': ['st-blocked','sel-blocked'] };
+
+  document.querySelectorAll('.mini-status-group, .status-group').forEach(grp => {
+    if (!grp.dataset.saveKey || !data[grp.dataset.saveKey]) return;
+    const label = data[grp.dataset.saveKey];
+    const classes = statusMap[label];
+    if (!classes) return;
+    grp.querySelectorAll('.st, .status-btn').forEach(btn => {
+      btn.classList.remove('st-todo','st-wip','st-done','st-blocked','sel-todo','sel-progress','sel-done','sel-blocked');
+      if (btn.textContent.trim() === label) {
+        btn.classList.add(btn.classList.contains('status-btn') ? classes[1] : classes[0]);
+      }
+    });
+  });
+
+  if (data['_saved_at']) {
+    const d = new Date(data['_saved_at']);
+    const s = document.getElementById('save-status');
+    if (s) { s.textContent = 'Restored from ' + d.toLocaleDateString() + ' ' + d.toLocaleTimeString(); s.style.color = '#0f6e56'; }
+  }
+}
+
+function clearSaved() {
+  if (!confirm('Clear all saved data? This cannot be undone.')) return;
+  localStorage.removeItem(SAVE_KEY);
+  const s = document.getElementById('save-status');
+  if (s) { s.textContent = 'Cleared.'; s.style.color = '#993c1d'; setTimeout(() => { s.textContent = 'Not saved yet'; s.style.color = '#aaa'; }, 2000); }
+}
+
+function startAutoSave() {
+  let timer;
+  document.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(saveAll, 1500);
+  });
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('st') || e.target.classList.contains('status-btn')) {
+      setTimeout(saveAll, 200);
+    }
+  });
+  setInterval(saveAll, 60000);
+}
+
+function exportSection() {
+  const activeTab = document.querySelector('.tab.active');
+  const activePanel = document.querySelector('.country-panel.active');
+  if (!activePanel) return;
+  const countryName = activeTab ? activeTab.textContent.trim() : 'Country';
+  const clone = activePanel.cloneNode(true);
+
+  const origInputs = activePanel.querySelectorAll('input, textarea, select');
+  const cloneInputs = clone.querySelectorAll('input, textarea, select');
+  origInputs.forEach((el, i) => { if (cloneInputs[i]) cloneInputs[i].value = el.value; });
+
+  const origBtns = activePanel.querySelectorAll('.st, .status-btn');
+  const cloneBtns = clone.querySelectorAll('.st, .status-btn');
+  origBtns.forEach((el, i) => { if (cloneBtns[i]) cloneBtns[i].className = el.className; });
+
+  clone.querySelectorAll('.factor-body').forEach(b => b.style.display = 'block');
+
+  const exportStyles = `*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F3F0;padding:2rem;color:#1a1a1a}.meta-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:1.5rem}.metric-card{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid #e5e3de}.metric-label{font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;font-weight:600}.metric-val{font-size:20px;font-weight:700}.metric-val.good{color:#0f6e56}.metric-val.warn{color:#854f0b}.metric-val.bad{color:#993c1d}.vs-badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:4px}.vs-badge.up{background:#EAF3DE;color:#27500A}.vs-badge.down{background:#FCEBEB;color:#791F1F}.section-title{font-size:10px;font-weight:700;color:#C8C4BC;text-transform:uppercase;letter-spacing:.08em;margin:1.2rem 0 .6rem}.factor-card{background:#fff;border:1px solid #e5e3de;border-radius:12px;margin-bottom:10px;overflow:hidden}.factor-header{display:flex;align-items:center;gap:10px;padding:14px 18px}.factor-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;white-space:nowrap}.factor-badge.culture{background:#EEEDFE;color:#3C3489}.factor-badge.recognition{background:#FBEAF0;color:#72243E}.factor-badge.wellbeing{background:#E1F5EE;color:#085041}.factor-badge.leaders{background:#E6F1FB;color:#0C447C}.factor-badge.growth{background:#EAF3DE;color:#27500A}.factor-badge.communication{background:#FAEEDA;color:#633806}.factor-badge.engagement{background:#FAECE7;color:#712B13}.factor-badge.offline{background:#EDE4F7;color:#5B2D8E}.factor-title{font-size:14px;font-weight:500;flex:1}.factor-body{padding:0 16px 16px;border-top:1px solid #f0ede8;display:block!important}.questions-box{font-size:12px;color:#555;font-style:italic;margin:14px 0 0;line-height:1.7;padding:10px 12px;background:#faf9f7;border-radius:6px;border-left:3px solid #e8321a}.questions-box .q{padding:2px 0}.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin:14px 0 0;border:1px solid #e5e3de;border-radius:8px;overflow:hidden}.col-head{background:#f5f3f0;padding:9px 14px;font-size:10px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #e5e3de}.three-col>div:not(:last-child) .col-head,.three-col>div:not(:last-child) .col-body{border-right:1px solid #e5e3de}.col-body{padding:10px 12px;min-height:80px}.action-row{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid #f5f3f0;font-size:13px;color:#333;line-height:1.5}.action-row:last-child{border-bottom:none}.action-row::before{content:'';width:5px;height:5px;border-radius:50%;background:#e8321a;margin-top:7px;flex-shrink:0}.follow-row::before{background:#0f6e56}.mini-status-group,.status-group{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}.st,.status-btn{font-size:10px;padding:2px 8px;border-radius:20px;border:1px solid #ddd;background:#fff;color:#888;font-family:inherit;font-weight:500}.st-todo,.sel-todo{background:#F1EFE8;color:#5F5E5A;border-color:#B4B2A9}.st-wip,.sel-progress{background:#FAEEDA;color:#633806;border-color:#EF9F27}.st-done,.sel-done{background:#EAF3DE;color:#27500A;border-color:#97C459}.st-blocked,.sel-blocked{background:#FCEBEB;color:#791F1F;border-color:#F09595}.pulse-section{margin:14px 0 0;border-top:1px dashed #e5e3de;padding-top:14px}.pulse-title{font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;display:flex;align-items:center;gap:6px}.pulse-dot{width:7px;height:7px;background:#e8321a;border-radius:50%;display:inline-block}.pulse-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pf label{font-size:11px;color:#999;display:block;margin-bottom:3px;font-weight:500}.pf input,.pf select,.pf textarea{width:100%;font-size:13px;border:1px solid #ddd;border-radius:7px;padding:7px 10px;background:#fff;color:#1a1a1a;font-family:inherit}.pf textarea{min-height:60px;line-height:1.5}.pf.full{grid-column:1/-1}`;
+
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Engagement Tracker - ${countryName}</title><style>${exportStyles}</style></head><body><div style="background:#1A0A2E;color:#fff;padding:16px 24px;border-radius:10px;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><div><div style="font-size:15px;font-weight:700">Engagement Survey — Action Plan Tracker</div><div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:3px">${countryName} &nbsp;·&nbsp; Jan 2026 &nbsp;·&nbsp; Exported ${new Date().toLocaleDateString()}</div></div><div style="font-size:12px;font-weight:700;color:#E8421A;letter-spacing:1px">smartbox</div></div>${clone.outerHTML}</body></html>`;
+
+  const blob = new Blob([html], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Engagement_' + countryName.replace(/[^a-zA-Z]/g,'_') + '_' + new Date().toISOString().slice(0,10) + '.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  assignSaveKeys();
+  loadAll();
+  startAutoSave();
+});
+
+function addPulseRow(btn) {
+  const container = btn.previousElementSibling;
+  const row = document.createElement('div');
+  row.className = 'pulse-factor-row';
+  row.style.cssText = 'background:#fff;border:1px solid #e5e3de;border-radius:10px;padding:14px 16px;margin-bottom:8px';
+  row.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <input type="text" placeholder="Factor name (e.g. Culture, Recognition…)" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #e5e3de;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#1a1a1a">
+      <button onclick="removePulseRow(this)" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px" title="Remove">&#10005;</button>
+    </div>
+    <div class="pulse-grid">
+      <div class="pf"><label>Planned date</label><input type="date"></div>
+      <div class="pf"><label>Format</label><select><option value="">Select…</option><option>Stand-up micro-survey</option><option>Anonymous online form</option><option>1:1 conversation</option><option>Team meeting Q&A</option><option>Post-event survey</option></select></div>
+      <div class="pf full"><label>Questions / focus areas</label><textarea placeholder="Define the questions for this factor in the pulse survey…"></textarea></div>
+      <div class="pf full"><label>Results / observations</label><textarea placeholder="To be completed after the pulse survey…"></textarea></div>
+    </div>`;
+  container.appendChild(row);
+  if (window.assignSaveKeys) assignSaveKeys();
+}
+
+function removePulseRow(btn) {
+  btn.closest('.pulse-factor-row').remove();
+}
+
+function addOfflineRow(btn) {
+  const container = document.getElementById('offline-rows-container');
+  const row = document.createElement('div');
+  row.style.cssText = 'background:#FAF5FF;border:1px solid #D8C8F0;border-radius:10px;padding:14px 16px;margin-bottom:8px';
+  row.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <input type="text" placeholder="Factor name…" style="flex:1;font-size:13px;font-weight:600;border:none;border-bottom:1px solid #D8C8F0;padding:4px 0;background:transparent;font-family:inherit;outline:none;color:#5B2D8E">
+      <button onclick="this.closest('div[style]').remove()" style="font-size:11px;color:#bbb;border:none;background:none;cursor:pointer;padding:2px 6px">&#10005;</button>
+    </div>
+    <div class="three-col" style="margin-top:0">
+      <div><div class="col-head">Actions planned</div><div class="col-body"><textarea style="width:100%;min-height:80px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Define actions…"></textarea></div></div>
+      <div><div class="col-head">Owner / timeline</div><div class="col-body"><textarea style="width:100%;min-height:80px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Owner and deadline…"></textarea></div></div>
+      <div><div class="col-head">Notes</div><div class="col-body"><textarea style="width:100%;min-height:80px;border:1px solid #ddd;border-radius:6px;padding:8px;font-size:13px;font-family:inherit;resize:vertical" placeholder="Notes…"></textarea></div></div>
+    </div>`;
+  container.appendChild(row);
+  if (window.assignSaveKeys) assignSaveKeys();
+}
+</script>
+</body>
+</html>
